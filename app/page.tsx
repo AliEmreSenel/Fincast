@@ -1,15 +1,17 @@
 "use client"
 import Link from "next/link"
-import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { DropdownMenuTrigger, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuItem, DropdownMenuContent, DropdownMenu } from "@/components/ui/dropdown-menu"
-import { CardTitle, CardDescription, CardHeader, CardContent, Card } from "@/components/ui/card"
-import { DialogTrigger, DialogTitle, DialogDescription, DialogHeader, DialogFooter, DialogContent, Dialog } from "@/components/ui/dialog"
-import { Label } from "@/components/ui/label"
-import { Command, CommandInput, CommandEmpty, CommandGroup, CommandItem, CommandList } from "@/components/ui/command"
-import { SearchIcon, SettingsIcon, StoreIcon, UserIcon, XIcon } from "lucide-react"
+import { CardContent, Card } from "@/components/ui/card"
+import { Command, CommandInput, CommandGroup, CommandItem, CommandList } from "@/components/ui/command"
+import { Table, TableBody, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
+import { Cloud, CloudLightning, CloudRain, LucideSun } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
+import { IoMdMedal } from "react-icons/io"
+import { AiOutlineStock } from "react-icons/ai"
+import { IoSchool } from "react-icons/io5"
 
 let stocks = [
   {
@@ -99,142 +101,153 @@ export default function Home() {
   ]);
   let [searchContent, setSearchContent] = useState("");
   return (
-    <div className="flex h-screen w-full">
-      <div className="hidden w-64 shrink-0 border-r bg-gray-100 dark:border-gray-800 dark:bg-gray-900 lg:block">
-        <div className="flex h-full flex-col justify-between py-6 px-4">
-          <div className="space-y-6">
-            <Link className="flex items-center gap-2 font-semibold" href="#">
-              <StoreIcon className="h-6 w-6" />
-              <span>Stock Tracker</span>
-            </Link>
-            <div className="relative">
-              <Command>
+    <div className="h-screen w-screen justify-center flex-col">
+      <header className="flex h-16 items-center p-5 border-b bg-gray-200 border-gray-700 pt-5 mb-5">
+        <div className="flex flex-1 h-16">
+          <img src="logo.png" alt="Fincast Logo" />
+        </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              className="rounded-full border border-gray-200 w-10 h-10 dark:border-gray-800"
+              size="icon"
+              variant="ghost"
+            >
+              <img
+                alt="Avatar"
+                className="rounded-full h-9 w-9"
+                src="/user-avatar-svgrepo-com.svg"
+                style={{
+                  aspectRatio: "64/64",
+                  objectFit: "cover",
+                }}
+              />
+              <span className="sr-only">Toggle user menu</span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>Settings</DropdownMenuItem>
+            <DropdownMenuItem>Support</DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>Logout</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </header>
+      <div className="w-full md:w1/2 lg:w-1/2 xl:w-2/5 mx-auto p-5">
+        <h1 className="text-8xl font-semibold text-gray-900 dark:text-gray-50">Hi, User</h1>
+        <main className="w-full mt-5">
+          <div className="w-full p-6">
+            <div className="flex items-center justify-between border rounded">
+              <Command className="overflow-visible bg-transparent">
                 <CommandInput
-
-                  className="w-full rounded-md border border-gray-200 bg-white px-10 py-2 text-sm shadow-sm transition-colors focus:border-gray-900 focus:outline-none focus:ring-1 focus:ring-gray-900 dark:border-gray-800 dark:bg-gray-950 dark:text-gray-50 dark:focus:border-gray-50 dark:focus:ring-gray-50"
                   placeholder="Search stocks..."
+                  value={searchContent}
+                  onValueChange={(e) => setSearchContent(e)}
                 />
-                <CommandList>
-                  {searchContent !== "" && (
-                    <>
-                      <CommandEmpty>No results found.</CommandEmpty>
-                      <CommandGroup>
-                        {stocks.map((stock) => (
-                          <CommandItem key={stock.symbol} onClick={() => router.push(`/details/${stock.symbol}`)}>
-                            <span>{stock.name} ({stock.symbol})</span>
-                          </CommandItem>
-                        ))}
-                      </CommandGroup>
-                    </>
-                  )
-                  }
-                </CommandList>
+                <div className="relative">
+                  <CommandList>
+                    {searchContent !== "" && (
+                      <div className="absolute w-full top-0 rounded-md border bg-popover text-popover-foreground shadow-md outline-none animate-in z-10">
+                        <CommandGroup className="h-full overflow-auto">
+                          {stocks.map((stock) => (
+                            <CommandItem key={stock.symbol} onClick={() => router.push(`/details/${stock.symbol}`)} onSelect={() => router.push(`/details/${stock.symbol}`)}>
+                              <span>{stock.name} ({stock.symbol})</span>
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      </div>
+                    )}
+                  </CommandList>
+                </div>
               </Command>
             </div>
-            <div className="space-y-2">
-              <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Watchlist</h3>
-              <ul className="space-y-1">
-                {watchlist.map((stock) => (
-                  <li key={stock}>
-                    <Button
-                      className="flex w-full items-center justify-between rounded-md px-3 py-2 text-left text-sm font-medium text-gray-900 hover:bg-gray-100 focus:bg-gray-100 dark:text-gray-50 dark:hover:bg-gray-800 dark:focus:bg-gray-800"
-                      size="sm"
-                      variant="ghost"
-                    >
-                      <span>{stock}</span>
-                      <XIcon className="h-4 w-4" onClick={() => setWatchlist(watchlist.filter((item) => item !== stock))} />
-                    </Button>
-                  </li>
-                ))}
-              </ul>
-              <Button className="w-full" size="sm" variant="outline" onClick={() => setWatchlist(watchlist.concat(["GOOGL"]))}>
-                Add to Watchlist
-              </Button>
-            </div>
           </div>
-          <div className="space-y-2">
-            <Button className="w-full" size="sm" variant="ghost">
-              <SettingsIcon className="h-4 w-4 mr-2" />
-              Settings
-            </Button>
-            <Button className="w-full" size="sm" variant="ghost">
-              <UserIcon className="h-4 w-4 mr-2" />
-              Profile
-            </Button>
-          </div>
-        </div>
-      </div>
-      <div className="flex-1">
-        <header className="flex h-16 items-center border-b bg-white px-6 dark:border-gray-800 dark:bg-gray-950">
-          <div className="flex-1">
-            <h1 className="text-lg font-semibold text-gray-900 dark:text-gray-50">Dashboard</h1>
-          </div>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                className="rounded-full border border-gray-200 w-8 h-8 dark:border-gray-800"
-                size="icon"
-                variant="ghost"
-              >
-                <img
-                  alt="Avatar"
-                  className="rounded-full"
-                  height="32"
-                  src="/placeholder.svg"
-                  style={{
-                    aspectRatio: "32/32",
-                    objectFit: "cover",
-                  }}
-                  width="32"
-                />
-                <span className="sr-only">Toggle user menu</span>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>Settings</DropdownMenuItem>
-              <DropdownMenuItem>Support</DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>Logout</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </header>
-        <main className="p-6">
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {stocks.map((stock) => (
-              <Card key={stock.symbol} onClick={() => router.push(`/details/${stock.symbol}`)}>
-                <CardHeader>
-                  <CardTitle>{stock.name} ({stock.symbol})</CardTitle>
-                  <CardDescription>
-                    <div className="flex items-center gap-2">
-                      <span className="text-lg font-semibold">${stock.priceList[0]}</span>
-                      <span className={`text-sm ${stock.percentChange > 0 ? "text-green-500" : "text-red-500"}`}>{stock.percentChange > 0 ? "+" : ""}{stock.percentChange}%</span>
-                    </div>
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">Volume</p>
-                      <p className="text-lg font-semibold">{stock.volume}M</p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">52-Week High</p>
-                      <p className="text-lg font-semibold">${stock.high}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">52-Week Low</p>
-                      <p className="text-lg font-semibold">${stock.low}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">Market Cap</p>
-                      <p className="text-lg font-semibold">${stock.marketCap}T</p>
-                    </div>
-                  </div>
+          <div className="p-6 grid grid-cols-3 gap-4">
+            <Link href="/games">
+              <Card>
+                <CardContent className="text-center pt-3">
+                  <IoMdMedal className="mx-auto h-24 w-24" />
+                  Daily Games
                 </CardContent>
               </Card>
-            ))}
+            </Link>
+            <Link href="/saved">
+              <Card>
+                <CardContent className="text-center pt-3">
+                  <AiOutlineStock className="mx-auto h-24 w-24" />
+                  Saved
+                </CardContent>
+              </Card>
+            </Link>
+            <Link href="/education">
+              <Card>
+                <CardContent className="text-center pt-3">
+                  <IoSchool className="mx-auto h-24 w-24" />
+                  Educational
+                </CardContent>
+              </Card>
+            </Link>
+          </div>
+          <div className="p-6">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="text-lg text-center">
+                    Forecast
+                  </TableHead>
+                  <TableHead className="text-lg">
+                    Stocks
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <TableRow>
+                  <td>
+                    <LucideSun className="mx-auto h-24 w-24 text-yellow-500" />
+                  </td>
+                  <td>
+                    <Badge className="bg-green-100 text-green-800 hover:bg-green-200">
+                      AAPL
+                    </Badge>
+                    <Badge className="bg-green-100 text-green-800 hover:bg-green-200">
+                      GOOGL
+                    </Badge>
+                  </td>
+                </TableRow>
+                <TableRow>
+                  <td>
+                    <Cloud className="mx-auto h-24 w-24 text-blue-500" />
+                  </td>
+                  <td>
+                    <Badge className="bg-yellow-100 text-yellow-800 hover:bg-yellow-200">
+                      TSLA
+                    </Badge>
+                  </td>
+                </TableRow>
+                <tr>
+                  <td>
+                    <CloudRain className="mx-auto h-24 w-24 text-blue-500" />
+                  </td>
+                  <td>
+                    <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-200">
+                      AMZN
+                    </Badge>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <CloudLightning className="mx-auto h-24 w-24 text-gray-500" />
+                  </td>
+                  <td>
+                    <Badge className="bg-red-100 text-red-800 hover:bg-red-200">
+                      MSFT
+                    </Badge>
+                  </td>
+                </tr>
+              </TableBody>
+            </Table>
           </div>
         </main>
       </div >
