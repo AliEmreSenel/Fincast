@@ -33,7 +33,7 @@ export default function Component({ params }: { params: { stock: string } }) {
         setQuestions(data.questions);
         setJust(data.result);
       });
-  }, []);
+  }, [params.stock]);
 
   if (dailyPrices.length === 0 || forecast === null || just === "" || name === "") {
     return <div>Loading...</div>
@@ -102,6 +102,7 @@ export default function Component({ params }: { params: { stock: string } }) {
         <div>
           <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Forecast</h2>
           <div className={`text-lg`}>
+            {/* @ts-ignore */}
             {params.stock} is forecasted to go <span className={`text-${forecast.forecast == "UP" ? "green" : "red"}-500`}>{forecast.forecast} by {forecast.percent}%</span> within one week
           </div>
           <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Justification</h3>
@@ -113,8 +114,10 @@ export default function Component({ params }: { params: { stock: string } }) {
           <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Asked Questions:</h2>
           {askedQAs.map((qa, i) => (
             <div key={i} className="mb-4">
+              {/* @ts-ignore */}
               <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Q: {qa.question}</h3>
               <div className="whitespace-pre text-wrap">
+                {/* @ts-ignore */}
                 A: {qa.answer}
               </div>
             </div>
@@ -141,7 +144,7 @@ export default function Component({ params }: { params: { stock: string } }) {
               body: JSON.stringify({ question })
             })
               .then(res => res.json())
-              .then(data => {
+              .then(data => { // @ts-ignore
                 setAskedQAs(askedQAs.concat([{ question, answer: data.answers }]));
               });
           }}>

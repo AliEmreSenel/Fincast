@@ -15,16 +15,16 @@ export function Article3() {
           <span className="text-lg font-semibold">1. Positive Vaccine Efficacy Data: </span>On November 16, 2020, Moderna announced interim results from its Phase 3 study, indicating that its COVID-19 vaccine candidate demonstrated an efficacy of approximately 94.5%. This news was a significant milestone in the race to develop effective vaccines against the COVID-19 pandemic.
         </li>
         <li>
-          <span className="text-lg font-semibold">2. Market Reaction: </span>The announcement of the positive vaccine efficacy data led to a surge in Moderna's stock price. On the day of the announcement, Moderna's shares jumped by over 9%. The news not only boosted Moderna's stock but also had a positive impact on broader market sentiment, particularly for companies in the healthcare and biotechnology sectors.
+          <span className="text-lg font-semibold">2. Market Reaction: </span>The announcement of the positive vaccine efficacy data led to a surge in Moderna&apos;s stock price. On the day of the announcement, Moderna&apos;s shares jumped by over 9%. The news not only boosted Moderna&apos;s stock but also had a positive impact on broader market sentiment, particularly for companies in the healthcare and biotechnology sectors.
         </li>
         <li>
-          <span className="text-lg font-semibold">3. Investor Confidence: </span>Moderna's vaccine efficacy data instilled confidence among investors and stakeholders in the company's ability to develop a successful COVID-19 vaccine. The news signaled a potential breakthrough in the fight against the pandemic and raised hopes for a return to normalcy.
+          <span className="text-lg font-semibold">3. Investor Confidence: </span>Moderna&apos;s vaccine efficacy data instilled confidence among investors and stakeholders in the company&apos;s ability to develop a successful COVID-19 vaccine. The news signaled a potential breakthrough in the fight against the pandemic and raised hopes for a return to normalcy.
         </li>
         <li>
-          <span className="text-lg font-semibold">4. Market Volatility: </span>Following the announcement, Moderna's stock experienced heightened volatility as investors reacted to news developments and updates regarding the vaccine's regulatory approval, distribution plans, and manufacturing capacity. The company's stock price fluctuated in response to market sentiment and external factors related to the COVID-19 pandemic.
+          <span className="text-lg font-semibold">4. Market Volatility: </span>Following the announcement, Moderna&apos;s stock experienced heightened volatility as investors reacted to news developments and updates regarding the vaccine&apos;s regulatory approval, distribution plans, and manufacturing capacity. The company&apos;s stock price fluctuated in response to market sentiment and external factors related to the COVID-19 pandemic.
         </li>
         <li>
-          <span className="text-lg font-semibold">5. Regulatory Approval and Distribution: </span>In the weeks following the announcement of the positive vaccine efficacy data, Moderna submitted applications for emergency use authorization (EUA) to regulatory authorities in various countries, including the U.S. Food and Drug Administration (FDA). Regulatory approval and the commencement of vaccine distribution further influenced Moderna's stock price as investors assessed the potential impact on the company's revenue and earnings prospects.
+          <span className="text-lg font-semibold">5. Regulatory Approval and Distribution: </span>In the weeks following the announcement of the positive vaccine efficacy data, Moderna submitted applications for emergency use authorization (EUA) to regulatory authorities in various countries, including the U.S. Food and Drug Administration (FDA). Regulatory approval and the commencement of vaccine distribution further influenced Moderna&apos;s stock price as investors assessed the potential impact on the company&apos;s revenue and earnings prospects.
         </li>
         <Article3Graph />
       </ol>

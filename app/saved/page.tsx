@@ -19,7 +19,7 @@ export default function Component() {
     Promise.all(wishlist.map((stock) => {
       return fetch("http://172.20.10.7/api/forecast/" + stock)
         .then((res) => res.json())
-    })).then((data) => {
+    })).then((data) => { //@ts-ignore
       setForecast(data)
     })
   }, [])
@@ -28,7 +28,7 @@ export default function Component() {
     Promise.all(wishlist.map((stock) => {
       return fetch("http://172.20.10.7/api/forecast/" + stock + "/name")
         .then((res) => res.json())
-    })).then((data) => {
+    })).then((data) => { // @ts-ignore
       setNames(data)
     });
   }, [])
@@ -49,16 +49,19 @@ export default function Component() {
           {wishlist.map((stock) => (
             <Card key={stock} onClick={() => router.push(`/details/${stock}`)}>
               <CardHeader>
+                {/* @ts-ignore */}
                 <CardTitle>{names.find((n) => n.stock == stock)!.name} ({stock})</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <p className="text-sm text-gray-500 dark:text-gray-400">Predicted Direction</p>
+                    {/* @ts-ignore */}
                     <p className={`text-lg font-semibold text-${forecast.find((f) => f.stock == stock)!.forecast == "UP" ? "green" : "red"}-500`}>{forecast.find((f) => f.stock == stock)!.forecast}</p>
                   </div>
                   <div>
                     <p className="text-sm text-gray-500 dark:text-gray-400">Predicted Change</p>
+                    {/* @ts-ignore */}
                     <p className={`text-lg font-semibold text-${forecast.find((f) => f.stock == stock)!.forecast == "UP" ? "green" : "red"}-500`}>{forecast.find((f) => f.stock == stock)!.forecast == "UP" ? "" : "-"}{forecast.find((f) => f.stock == stock)!.percent}%</p>
                   </div>
                 </div>

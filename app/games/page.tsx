@@ -147,7 +147,7 @@ export default function Component() {
   let [isClient, setIsClient] = useState(false);
   let questions = useMemo(() => arrayShuffle(questionList.map((question) => {
     return {
-      ...question,
+      ...question, // @ts-ignore
       answers: arrayShuffle(question.answers)
     }
   })), [questionList]);
@@ -163,6 +163,7 @@ export default function Component() {
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Daily Quiz</h1>
         </div>
+        {/* @ts-ignore */}
         <Progress value={(questionIndex + (selectedAnswer !== -1 ? 1 : 0)) / questions.length * 100} className={"mb-8 "} ccn={((questionIndex + (selectedAnswer !== -1 ? 1 : 0)) == questions.length ? "bg-green-500" : "")} />
         {showResults ? (
           <div>

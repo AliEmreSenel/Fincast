@@ -8,14 +8,14 @@ export function Article1() {
     <div>
       <h2 className="text-2xl font-semibold">Head and Shoulders</h2>
       <p>
-        The head and shoulders chart pattern is a widely recognized technical analysis pattern used by traders to identify potential trend reversals. It's named for its visual resemblance to a head with two shoulders on either side. This pattern typically occurs after an uptrend and signals that the asset's price may be about to reverse and start a downtrend. It is characterized by the following elements:
+        The head and shoulders chart pattern is a widely recognized technical analysis pattern used by traders to identify potential trend reversals. It&apos;s named for its visual resemblance to a head with two shoulders on either side. This pattern typically occurs after an uptrend and signals that the asset&apos;s price may be about to reverse and start a downtrend. It is characterized by the following elements:
       </p>
       <ol>
         <li>
           <span className="text-lg font-semibold">1. Uptrend: </span>The head and shoulders pattern forms after a prolonged uptrend in the price of an asset. This uptrend is characterized by higher highs and higher lows on the price chart.
         </li>
         <li>
-          <span className="text-lg font-semibold">2. Left Shoulder: </span>The left shoulder is formed when the price reaches a peak during the uptrend, followed by a temporary decline. This decline represents a pullback or consolidation phase after a period of upward movement. The low point of the pullback forms the "neckline" of the pattern.
+          <span className="text-lg font-semibold">2. Left Shoulder: </span>The left shoulder is formed when the price reaches a peak during the uptrend, followed by a temporary decline. This decline represents a pullback or consolidation phase after a period of upward movement. The low point of the pullback forms the &quot;neckline&quot; of the pattern.
         </li>
         <li>
           <span className="text-lg font-semibold">3. Head: </span>After the left shoulder, the price resumes its upward movement and reaches a higher peak, forming the head of the pattern. This peak is typically higher than the peak of the left shoulder. The head represents a higher high in the price trend.
@@ -24,7 +24,7 @@ export function Article1() {
           <span className="text-lg font-semibold">4. Right Shoulder: </span>Following the head, there is another pullback in the price, similar to the one after the left shoulder. However, this pullback typically does not reach the same high as the head. The peak of the right shoulder is usually lower than the peak of the head and is roughly symmetrical to the left shoulder. This symmetry is not always perfect but is a common characteristic of the pattern.
         </li>
         <li>
-          <span className="text-lg font-semibold">5. Neckline: </span>The neckline is a horizontal line drawn connecting the low points of the left shoulder and the right shoulder. It serves as a support level for the price during the formation of the pattern. The neckline is a crucial element of the pattern as it helps traders confirm the pattern's validity.
+          <span className="text-lg font-semibold">5. Neckline: </span>The neckline is a horizontal line drawn connecting the low points of the left shoulder and the right shoulder. It serves as a support level for the price during the formation of the pattern. The neckline is a crucial element of the pattern as it helps traders confirm the pattern&apos;s validity.
         </li>
         <li>
           <span className="text-lg font-semibold">6. Breakdown: </span>The completion of the head and shoulders pattern occurs when the price breaks below the neckline after forming the right shoulder. This breakdown is seen as a confirmation that the uptrend has reversed, and a new downtrend may be beginning. Traders often look for increased volume accompanying the breakdown to validate the pattern.

@@ -12,7 +12,7 @@ export function Article2() {
       </p>
       <ol>
         <li>
-          <span className="text-lg font-semibold">1. Downtrend: </span>The rounding bottom pattern begins with a prolonged downtrend in the price of an asset. This downtrend is characterized by lower lows and lower highs on the price chart, indicating a consistent decline in the asset's value over time.
+          <span className="text-lg font-semibold">1. Downtrend: </span>The rounding bottom pattern begins with a prolonged downtrend in the price of an asset. This downtrend is characterized by lower lows and lower highs on the price chart, indicating a consistent decline in the asset&apos;s value over time.
         </li>
         <li>
           <span className="text-lg font-semibold">2. Transition Phase: </span>As the downtrend loses momentum, the price movement begins to flatten out, forming a gradual curve or rounding bottom shape on the chart. This phase represents a period of consolidation and accumulation, where buying pressure starts to equal or exceed selling pressure.
