@@ -35,7 +35,7 @@ export default function Component({ params }: { params: { stock: string } }) {
       });
   }, []);
 
-  if (dailyPrices.length === 0 || forecast === null || questions.length === 0 || just === "" || name === "") {
+  if (dailyPrices.length === 0 || forecast === null || just === "" || name === "") {
     return <div>Loading...</div>
   }
 
@@ -55,8 +55,33 @@ export default function Component({ params }: { params: { stock: string } }) {
               },
               yAxis: {
                 type: "value",
-                min: 48,
+                scale: true,
               },
+              toolbox: {
+                feature: {
+                  dataZoom: {
+                    yAxisIndex: 'none'
+                  },
+                  restore: {},
+                  saveAsImage: {}
+                }
+              },
+              dataZoom: [
+                {
+                  show: true,
+                  realtime: true,
+                  start: 0,
+                  end: 100,
+                  xAxisIndex: [0, 1]
+                },
+                {
+                  type: 'inside',
+                  realtime: true,
+                  start: 0,
+                  end: 100,
+                  xAxisIndex: [0, 1]
+                }
+              ],
               series: [
                 {
                   name: "Price",
@@ -76,15 +101,15 @@ export default function Component({ params }: { params: { stock: string } }) {
         </div>
         <div>
           <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Forecast</h2>
-          <div className={`text-lg text-${forecast.forecast == "UP" ? "green" : "red"}-300`}>
-            Forecast for {params.stock} is {forecast.forecast} {forecast.percent}%
+          <div className={`text-lg`}>
+            {params.stock} is forecasted to go <span className={`text-${forecast.forecast == "UP" ? "green" : "red"}-500`}>{forecast.forecast} by {forecast.percent}%</span> within one week
           </div>
           <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Justification</h3>
           <div className="whitespace-pre text-wrap">
             {just}
           </div>
         </div>
-        <div>
+        {askedQAs && askedQAs.length > 0 && < div >
           <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Asked Questions:</h2>
           {askedQAs.map((qa, i) => (
             <div key={i} className="mb-4">
@@ -94,15 +119,17 @@ export default function Component({ params }: { params: { stock: string } }) {
               </div>
             </div>
           ))}
-        </div>
-        <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">Suggested Questions:</h2>
-        <div className="w-full gap-4 mb-4">
-          {questions.map((q, i) => (
-            <Badge key={i} onClick={() => setQuestion(q)} className="cursor-pointer">
-              {q}
-            </Badge>
-          ))}
-        </div>
+        </div>}
+        {questions && questions.length > 0 && <>
+          <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">Suggested Questions:</h2>
+          <div className="w-full gap-4 mb-4">
+            {questions.map((q, i) => (
+              <Badge key={i} onClick={() => setQuestion(q)} className="cursor-pointer w-full">
+                {q}
+              </Badge>
+            ))}
+          </div>
+        </>}
         <div className="flex items-center gap-4">
           <Textarea className="flex-1" placeholder="Ask a question about the stock data..." value={question} onChange={(e) => setQuestion(e.target.value)} />
           <Button onClick={() => {
@@ -122,7 +149,7 @@ export default function Component({ params }: { params: { stock: string } }) {
           </Button>
         </div>
       </div>
-    </div>
+    </div >
   )
 }
 
