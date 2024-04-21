@@ -158,7 +158,7 @@ export default function Component() {
   let question = questions[questionIndex];
 
   return (
-    <div className="h-full w-screen bg-gray-100 dark:bg-gray-900">
+    <div className="h-full w-screen bg-gray-100 dark:bg-gray-900 min-h-screen">
       <div className="w-full max-w-4xl p-6 bg-white rounded-lg shadow-lg dark:bg-gray-800 mx-auto">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Daily Quiz</h1>
