@@ -2,11 +2,15 @@
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 import { Input } from '@/components/ui/input'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Line, ResponsiveLine } from '@nivo/line'
 import arrayShuffle from 'array-shuffle'
 import ReactECharts from 'echarts-for-react'
 import EChartsReact from 'echarts-for-react'
+import { CircularProgressbar } from 'react-circular-progressbar'
+import 'react-circular-progressbar/dist/styles.css';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { useRouter } from 'next/navigation'
 
 let questionList = [
   {
@@ -134,150 +138,233 @@ let questionList = [
 ]
 
 export default function Component() {
+  let router = useRouter();
   let [questionIndex, setQuestionIndex] = useState(0);
   let [selectedAnswer, setSelectedAnswer] = useState(-1);
   let [score, setScore] = useState(0);
   let [showSolution, setShowSolution] = useState(false);
+  let [showResults, setShowResults] = useState(false);
+  let [isClient, setIsClient] = useState(false);
   let questions = useMemo(() => arrayShuffle(questionList.map((question) => {
     return {
       ...question,
       answers: arrayShuffle(question.answers)
     }
   })), [questionList]);
+  useEffect(() => setIsClient(true));
+  if (!isClient) {
+    return ("")
+  }
   let question = questions[questionIndex];
+
   return (
     <div className="h-full w-screen bg-gray-100 dark:bg-gray-900">
       <div className="w-full max-w-4xl p-6 bg-white rounded-lg shadow-lg dark:bg-gray-800 mx-auto">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Daily Quiz</h1>
         </div>
-        <Progress className="mb-8" value={(questionIndex + (selectedAnswer !== -1 ? 1 : 0)) / questions.length * 100} />
-        <div className="mb-8">
-          {question.type === 0 ? (
-            <div className="mb-4">
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 whitespace-wrap">{question.question}</h2>
-              <div className="w-full aspect-[16/9]" >
-                <EChartsReact option={
-                  {
-                    grid: { top: 8, right: 8, bottom: 24, left: 24 },
-                    xAxis: {
-                      type: "category",
-                      data: question.questionGraph?.map((point) => point.x)
-                    },
-                    yAxis: {
-                      type: "value",
-                    },
-                    series: [
-                      {
-                        name: "Price",
-                        type: "line",
-                        smooth: true,
-                        data: question.questionGraph?.map((point) => point.y)
-                      }
-                    ],
-                    tooltip: {
-                      trigger: "axis",
-                      axisPointer: {
-                        type: "cross"
-                      }
-                    }
-                  }} />
+        <Progress value={(questionIndex + (selectedAnswer !== -1 ? 1 : 0)) / questions.length * 100} className={"mb-8 "} ccn={((questionIndex + (selectedAnswer !== -1 ? 1 : 0)) == questions.length ? "bg-green-500" : "")} />
+        {showResults ? (
+          <div>
+            <div className='flex justify-around border-b pb-4'>
+              <div className='flex flex-col whitespace-nowrap self-center'>
+                <span className="text-xl font-semibold">Correct Answers: {score}</span>
+                <span className="text-xl font-semibold">Incorrect Answers: {questions.length - score}</span>
+                <span className='text-xl font-semibold'>Rank: 3</span>
+              </div>
+              <div className='h-32 w-32'>
+                <CircularProgressbar value={score / questions.length * 100} text={`${(score / questions.length * 100).toFixed(2)}%`} strokeWidth={14} className='h-32 w-32' />
               </div>
             </div>
-          ) : (
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">{question.question}</h2>
-          )}
-          <div className={"mt-4" + (question.type == 0 ? " grid grid-cols-2" : "")}>
-            {question.answers.map((answer, index) => (
-              <button
-                key={index}
-                className={`w-full py-2 px-4 rounded-lg border border-gray-200 dark:border-gray-800 text-left mt-2 ${selectedAnswer === index
-                  ? answer.correct
-                    ? "bg-green-500"
-                    : "bg-red-500"
-                  : selectedAnswer !== -1 ?
-                    answer.correct ?
-                      "bg-green-500"
-                      : "bg-white"
-                    : "bg-white"
-                  }`}
-                onClick={() => {
-                  if (selectedAnswer === -1) {
-                    setSelectedAnswer(index);
-                    if (answer.correct) {
-                      setScore(score + 1);
-                    }
-                  }
-                }}
-              >
-                {answer.type == 0 ?
-                  (
-                    <div className="w-full aspect-[16/9]" >
-                      <EChartsReact option={
-                        {
-                          grid: { top: 8, right: 8, bottom: 24, left: 24 },
-                          xAxis: {
-                            type: "category",
-                            data: answer.data.map((point) => point.x)
-                          },
-                          yAxis: {
-                            type: "value",
-                          },
-                          series: [
-                            {
-                              name: "Price",
-                              type: "line",
-                              smooth: true,
-                              data: answer.data.map((point) => point.y)
-                            }
-                          ],
-                          tooltip: {
-                            trigger: "axis",
-                            axisPointer: {
-                              type: "cross"
-                            }
-                          }
-                        }} />
-                    </div>
-                  ) :
-                  (
-                    <>{answer.data}</>
-                  )
-
-                }
-              </button>
-            ))}
-          </div>
-          {selectedAnswer !== -1 && <>
-            {question.solution &&
-              <div className='mt-5'>
-                <h4 className="font-semibold text-lg">
-                  Solution:
-                </h4>
-                {question.solution}
-              </div>}
-            <div className='flex justify-center'>
-              <Button className="mt-4 bg-blue-500 self-end"
-                onClick={() => {
-                  if (selectedAnswer !== -1) {
-                    if (questionIndex + 1 < questions.length) {
-                      setQuestionIndex(questionIndex + 1);
-                      setSelectedAnswer(-1);
-                      setShowSolution(false);
-                    }
-                    else {
-
-                    }
-                  }
-                }}>
-                {(selectedAnswer !== -1 && questionIndex + 1 == questions.length) ? "Finish" :
-                  "Next Question"}
-              </Button>
-
+            <div className='mt-5'>
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Leaderboard:</h1>
+              </div>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>
+                      Rank
+                    </TableHead>
+                    <TableHead>
+                      User
+                    </TableHead>
+                    <TableHead>
+                      Score
+                    </TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  <TableRow>
+                    <TableCell>
+                      1
+                    </TableCell>
+                    <TableCell>
+                      Finance Master
+                    </TableCell>
+                    <TableCell>
+                      {questions.length}
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>
+                      2
+                    </TableCell>
+                    <TableCell>
+                      Accounter
+                    </TableCell>
+                    <TableCell>
+                      {questions.length}
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>
+                      3
+                    </TableCell>
+                    <TableCell>
+                      You
+                    </TableCell>
+                    <TableCell>
+                      {score}
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
             </div>
-          </>
-          }
-        </div>
+            <div className='flex flex-grow justify-center'>
+              <Button onClick={() => router.push("/")} className='bg-blue-500 hover:bg-blue-600'>
+                Back to Dashboard
+              </Button>
+            </div>
+          </div>
+        ) :
+          <div className="mb-8">
+            {question.type === 0 ? (
+              <div className="mb-4">
+                <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 whitespace-wrap">{question.question}</h2>
+                <div className="w-full aspect-[16/9]" >
+                  <EChartsReact option={
+                    {
+                      grid: { top: 8, right: 8, bottom: 24, left: 24 },
+                      xAxis: {
+                        type: "category",
+                        data: question.questionGraph?.map((point) => point.x)
+                      },
+                      yAxis: {
+                        type: "value",
+                      },
+                      series: [
+                        {
+                          name: "Price",
+                          type: "line",
+                          smooth: true,
+                          data: question.questionGraph?.map((point) => point.y)
+                        }
+                      ],
+                      tooltip: {
+                        trigger: "axis",
+                        axisPointer: {
+                          type: "cross"
+                        }
+                      }
+                    }} />
+                </div>
+              </div>
+            ) : (
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">{question.question}</h2>
+            )}
+            <div className={"mt-4" + (question.type == 0 ? " grid grid-cols-2" : "")}>
+              {question.answers.map((answer, index) => (
+                <button
+                  key={index}
+                  className={`w-full py-2 px-4 rounded-lg border border-gray-200 dark:border-gray-800 text-left mt-2 ${selectedAnswer === index
+                    ? answer.correct
+                      ? "bg-green-500"
+                      : "bg-red-500"
+                    : selectedAnswer !== -1 ?
+                      answer.correct ?
+                        "bg-green-500"
+                        : "bg-white"
+                      : "bg-white"
+                    }`}
+                  onClick={() => {
+                    if (selectedAnswer === -1) {
+                      setSelectedAnswer(index);
+                      if (answer.correct) {
+                        setScore(score + 1);
+                      }
+                    }
+                  }}
+                >
+                  {answer.type == 0 ?
+                    (
+                      <div className="w-full aspect-[16/9]" >
+                        <EChartsReact option={
+                          {
+                            grid: { top: 8, right: 8, bottom: 24, left: 24 },
+                            xAxis: {
+                              type: "category",
+                              data: answer.data.map((point) => point.x)
+                            },
+                            yAxis: {
+                              type: "value",
+                            },
+                            series: [
+                              {
+                                name: "Price",
+                                type: "line",
+                                smooth: true,
+                                data: answer.data.map((point) => point.y)
+                              }
+                            ],
+                            tooltip: {
+                              trigger: "axis",
+                              axisPointer: {
+                                type: "cross"
+                              }
+                            }
+                          }} />
+                      </div>
+                    ) :
+                    (
+                      <>{answer.data}</>
+                    )
+
+                  }
+                </button>
+              ))}
+            </div>
+            {selectedAnswer !== -1 && <>
+              {question.solution &&
+                <div className='mt-5'>
+                  <h4 className="font-semibold text-lg">
+                    Solution:
+                  </h4>
+                  {question.solution}
+                </div>}
+              <div className='flex justify-center'>
+                <Button className="mt-4 bg-blue-500 self-end"
+                  onClick={() => {
+                    if (selectedAnswer !== -1) {
+                      if (questionIndex + 1 < questions.length) {
+                        setQuestionIndex(questionIndex + 1);
+                        setSelectedAnswer(-1);
+                        setShowSolution(false);
+                      }
+                      else {
+                        setShowResults(true);
+                      }
+                    }
+                  }}>
+                  {(selectedAnswer !== -1 && questionIndex + 1 == questions.length) ? "Finish" :
+                    "Next Question"}
+                </Button>
+
+              </div>
+            </>
+            }
+          </div>
+        }
       </div>
     </div>
   )
