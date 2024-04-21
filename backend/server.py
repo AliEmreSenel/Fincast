@@ -39,7 +39,7 @@ def name(stock):
 @app.route("/api/forecast/list", methods=['GET'])
 @cross_origin()
 def stocks_list():
-    df = pd.read_csv("server/nasdaq.csv")
+    df = pd.read_csv("backend/nasdaq.csv")
     stocks_dict = {}
     for index, row in df.iterrows():
         stocks_dict[row['Ticker']] = row['Name']
