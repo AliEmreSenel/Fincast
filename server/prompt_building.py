@@ -7,9 +7,6 @@ import requests
 
 FINNHUB_CLIENT = finnhub.Client(api_key="coi1lshr01qpcmnio7cgcoi1lshr01qpcmnio7d0")
 API = 'vD9ONa9vNXNJ1GuQfyNrNwZVKjOGDEBz'
-STOCK = 'AAPL'
-START_DATE = '2024-04-12'
-END_DATE = '2024-04-19'
 
 def create_df(STOCK, startDate, endDate, finnhub_client, api):
     df_company_profile = pd.DataFrame(finnhub_client.company_profile2(symbol=STOCK), index=[0])
@@ -74,7 +71,7 @@ def build_prompt(name, finnhubIndustry, ipo, marketCapitalization, currency, sha
     return B_INST + B_SYS + SYSTEM_PROMPT + E_SYS + prompt + E_INST
 
 
-def build_prompt_from_df(STOCK, startDate, endDate):
+def build_prompt_from_df(STOCK, startDate, endDate, period=7):
     df_basic_financials, df_news, df_company_profile = create_df(STOCK, startDate, endDate, FINNHUB_CLIENT, API)
     df_prices = yf.download(STOCK, start=startDate, end=endDate)
 
@@ -110,9 +107,8 @@ def build_prompt_from_df(STOCK, startDate, endDate):
     attr3 = 'Dividend Yield'
     value3 = df_basic_financials[df_basic_financials['Year'] == int(date)][attr3].values[0] if df_basic_financials[df_basic_financials['Year'] == int(date)][attr3].values.size > 0 else None
 
-    # period = input() ###############################
-    period = 7
-    period = f"from {datetime.strptime(endDate, '%Y-%m-%d')} to {datetime.strptime(endDate, '%Y-%m-%d') + timedelta(days=period)}" # fetch from input the prediction
+    time_period = period
+    period = f"from {datetime.strptime(endDate, '%Y-%m-%d')} to {datetime.strptime(endDate, '%Y-%m-%d') + timedelta(days=time_period)}" # fetch from input the prediction
 
     return build_prompt(name, finnhubIndustry, ipo, marketCapitalization, currency, shareOutstanding, country, ticker, exchange, startDate, endDate, change, startPrice, endPrice, headline1, summary1, headline2, summary2, headline3, summary3, date, attr1, value1, attr2, value2, attr3, value3, period)
 # [Company Introduction]:
@@ -141,4 +137,7 @@ def build_prompt_from_df(STOCK, startDate, endDate):
 #     Based on all the information before 2024-04-19, let's first analyze the positive developments and potential concerns for AAPL. Come up with 2-4 most important factors respectively and keep them concise. Most factors should be inferred from company-related news. Then make your prediction of the AAPL stock price movement for next week (from 2024-04-19 00:00:00 to 2024-04-26 00:00:00). Provide a summary analysis to support your prediction.
 
 if __name__ == '__main__':
+    STOCK = 'TSLA'
+    START_DATE = '2024-04-12'
+    END_DATE = '2024-04-19'
     print(build_prompt_from_df(STOCK, START_DATE, END_DATE))

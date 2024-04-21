@@ -8,11 +8,7 @@ from peft import PeftModel
 import re
 from prompt_building import build_prompt_from_df
 
-STOCK = 'AAPL'
-START_DATE = '2024-04-12'
-END_DATE = '2024-04-19'
-
-def predition(STOCK, START_DATE, END_DATE):
+def prediction(STOCK, START_DATE, END_DATE, period=7):
     base_model = AutoModelForCausalLM.from_pretrained(
         'meta-llama/Llama-2-7b-chat-hf',
         trust_remote_code=True,
@@ -28,7 +24,7 @@ def predition(STOCK, START_DATE, END_DATE):
     tokenizer.padding_side = "right"
     tokenizer.pad_token_id = tokenizer.eos_token_id
 
-    prompt = build_prompt_from_df(STOCK, START_DATE, END_DATE)
+    prompt = build_prompt_from_df(STOCK, START_DATE, END_DATE, period=period)
     inputs = tokenizer(
         prompt, return_tensors='pt'
     )
@@ -55,4 +51,7 @@ def predition(STOCK, START_DATE, END_DATE):
                     # Based on the above analysis, I predict that Apple's stock price will decrease by around 2-3% in the upcoming week. While the company has shown strong commitment to sustainability and innovation, there are some potential concerns that may impact the stock price in the short term. The recent decrease in stock price and high P/E ratio are significant concerns, as they could indicate potential market instability and caution among investors. However, the company's commitment to sustainability and innovation could potentially drive long-term growth and stability. Therefore, while the short-term outlook may be somewhat negative, the long-term outlook for Apple remains positive.
 
 if __name__ == '__main__':
-    print(predition(STOCK, START_DATE, END_DATE))
+    STOCK = 'AAPL'
+    START_DATE = '2024-04-12'
+    END_DATE = '2024-04-19'
+    print(prediction(STOCK, START_DATE, END_DATE))

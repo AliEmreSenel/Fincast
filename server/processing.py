@@ -2,21 +2,7 @@
 from transformers import AutoTokenizer, AutoModelForCausalLM
 import torch
 from prediction import prediction
-
-STOCK = 'AAPL'
-START_DATE = '2024-04-12'
-END_DATE = '2024-04-19'
-
-model_id = "meta-llama/Meta-Llama-3-8B-Instruct"
-
-tokenizer = AutoTokenizer.from_pretrained(model_id)
-model = AutoModelForCausalLM.from_pretrained(
-    model_id,
-    torch_dtype=torch.bfloat16,
-    load_in_4bit=True
-)
-
-answer = prediction(STOCK, START_DATE, END_DATE)
+from peft import PeftModel
 
 def change_prediction(answer):
     messages = [
@@ -82,8 +68,7 @@ def generate_questions(answer):
                      # 3. What is the significance of a decreasing stock price trend, and how can it be used to identify potential market instability or investor sentiment shifts?
 
 
-def generate_answers(answer):
-    questions = generate_questions(answer)
+def generate_answers(questions):
     messages = [
     {"role": "system", "content": """You are an Economics Professor specialised in Finance. Given the input text, give 3 complete answers to the three questions you are presented with. Give full, detailed answers with a professional tone citing financial knowledge. Output should be in the following form: 
     1. Answer1
@@ -150,6 +135,28 @@ def generate_answers(answer):
 
                     # Source: Shiller, R. J. (2014). Irrational Exuberance. Princeton University Press.
 
-change = change_prediction(answer)
-questions = generate_questions(answer)
-answers = generate_answers(answer)
+if __name__ == "__main__":
+
+    STOCK = 'AAPL'
+    START_DATE = '2024-04-12'
+    END_DATE = '2024-04-19'
+
+    base_model = AutoModelForCausalLM.from_pretrained(
+        'meta-llama/Llama-2-7b-chat-hf',
+        trust_remote_code=True,
+        device_map="auto",
+        torch_dtype=torch.float16,   
+    )
+    base_model.model_parellal = True
+
+    model = PeftModel.from_pretrained(base_model, 'FinGPT/fingpt-forecaster_dow30_llama2-7b_lora')
+    model = model.eval()
+
+    tokenizer = AutoTokenizer.from_pretrained('meta-llama/Llama-2-7b-chat-hf')
+    tokenizer.padding_side = "right"
+    tokenizer.pad_token_id = tokenizer.eos_token_id
+
+    answer = prediction(STOCK, START_DATE, END_DATE)
+    change = change_prediction(answer)
+    questions = generate_questions(answer)
+    answers = generate_answers(answer)
