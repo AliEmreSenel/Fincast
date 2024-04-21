@@ -16,18 +16,18 @@ export default function Component({ params }: { params: { stock: string } }) {
   let [askedQAs, setAskedQAs] = useState([]);
 
   useEffect(() => {
-    fetch(`http://172.20.10.7/api/forecast/${params.stock}/name`)
+    fetch(`http://172.20.10.7/api/forecast/${params.stock}/name`, { method: "get", headers: new Headers({ "ngrok-skip-browser-warning": "true", }) })
       .then(res => res.json())
       .then(data => {
         setName(data.name);
       });
-    fetch(`http://172.20.10.7/api/forecast/${params.stock}/daily`)
+    fetch(`http://172.20.10.7/api/forecast/${params.stock}/daily`, { method: "get", headers: new Headers({ "ngrok-skip-browser-warning": "true", }) })
       .then(res => res.json())
       .then(data => setDailyPrices(data));
-    fetch(`http://172.20.10.7/api/forecast/${params.stock}`)
+    fetch(`http://172.20.10.7/api/forecast/${params.stock}`, { method: "get", headers: new Headers({ "ngrok-skip-browser-warning": "true", }) })
       .then(res => res.json())
       .then(data => setForecast(data));
-    fetch(`http://172.20.10.7/api/forecast/${params.stock}/QA`)
+    fetch(`http://172.20.10.7/api/forecast/${params.stock}/QA`, { method: "get", headers: new Headers({ "ngrok-skip-browser-warning": "true", }) })
       .then(res => res.json())
       .then(data => {
         setQuestions(data.questions);
@@ -139,7 +139,8 @@ export default function Component({ params }: { params: { stock: string } }) {
             fetch(`http://172.20.10.7/api/forecast/${params.stock}/QA`, {
               method: "POST",
               headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "ngrok-skip-browser-warning": "true",
               },
               body: JSON.stringify({ question })
             })
