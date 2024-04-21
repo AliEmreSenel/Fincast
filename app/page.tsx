@@ -30,6 +30,7 @@ let forecast = [
 export default function Home() {
   let [forecasts, setForecasts] = useState([]);
   let [trendingStocks, setTrendingStocks] = useState(null);
+  let [stocks, setStocks] = useState([]);
   let router = useRouter();
   let [searchContent, setSearchContent] = useState("");
 
@@ -42,6 +43,12 @@ export default function Home() {
         console.log("Using mock data");
         setTrendingStocks(trendingStocks);
       });
+  }, [])
+
+  useEffect(() => {
+    fetch("http://172.20.10.7/api/forecast/list")
+      .then((res) => res.json())
+      .then((data) => setStocks(data))
   }, [])
 
   useEffect(() => {
@@ -58,9 +65,8 @@ export default function Home() {
     });
   }, [trendingStocks])
 
-  if (forecasts.length == 0 || !forecasts) {
+  if (forecasts.length == 0 || !forecasts || !stocks || stocks.length == 0)
     return <div>Loading...</div>
-  }
 
   return (
     <div className="h-screen w-screen justify-center flex-col">
@@ -113,12 +119,12 @@ export default function Home() {
                     {searchContent !== "" && (
                       <div className="absolute w-full top-0 rounded-md border bg-popover text-popover-foreground shadow-md outline-none animate-in z-10">
                         <CommandGroup className="h-full overflow-auto">
-                          {stocks.map((stock) => (
-                            <CommandItem key={stock.symbol}
-                              onClick={() => router.push(`/details/${stock.symbol}`)}
-                              onSelect={() => router.push(`/details/${stock.symbol}`)}>
+                          {Object.entries(stocks).map(([sym, nmae], i) => (
+                            <CommandItem key={i}
+                              onClick={() => router.push(`/details/${sym}`)}
+                              onSelect={() => router.push(`/details/${sym}`)}>
                               <span
-                                onClick={() => router.push(`/details/${stock.symbol}`)}>{stock.name} ({stock.symbol})</span>
+                                onClick={() => router.push(`/details/${sym}`)}>{nmae} ({sym})</span>
                             </CommandItem>
                           ))}
                         </CommandGroup>
