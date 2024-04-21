@@ -216,7 +216,7 @@ export default function Home() {
               </TableHeader>
               <TableBody>
                 {forecast.map((item) => (
-                  <TableRow key={item.stock}>
+                  <TableRow key={item.stock} onClick={() => router.push("/details/" + item.stock)} className="cursor-pointer">
                     <td>
                       {item.forecast === "UP"
                         ? item.percent > 1
