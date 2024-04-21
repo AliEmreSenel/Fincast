@@ -17,7 +17,7 @@ export default function Component() {
 
   useEffect(() => {
     Promise.all(wishlist.map((stock) => {
-      return fetch("http://172.20.10.6/api/forecast/" + stock, { method: "get", headers: new Headers({ "ngrok-skip-browser-warning": "true", }) })
+      return fetch("http://172.20.10.6:3002/api/forecast/" + stock, { method: "get", headers: new Headers({ "ngrok-skip-browser-warning": "true", }) })
         .then((res) => res.json())
     })).then((data) => { //@ts-ignore
       setForecast(data)
@@ -26,7 +26,7 @@ export default function Component() {
 
   useEffect(() => {
     Promise.all(wishlist.map((stock) => {
-      return fetch("http://172.20.10.6/api/forecast/" + stock + "/name", { method: "get", headers: new Headers({ "ngrok-skip-browser-warning": "true", }) })
+      return fetch("http://172.20.10.6:3002/api/forecast/" + stock + "/name", { method: "get", headers: new Headers({ "ngrok-skip-browser-warning": "true", }) })
         .then((res) => res.json())
     })).then((data) => { // @ts-ignore
       setNames(data)

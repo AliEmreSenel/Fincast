@@ -35,7 +35,7 @@ export default function Home() {
   let [searchContent, setSearchContent] = useState("");
 
   useEffect(() => {
-    fetch("http://172.20.10.6/api/popular_stocks", { method: "get", headers: new Headers({ "ngrok-skip-browser-warning": "true", }) })
+    fetch("http://172.20.10.6:3002/api/popular_stocks", { method: "get", headers: new Headers({ "ngrok-skip-browser-warning": "true", }) })
       .then((res) => res.json())
       .then((data) => setTrendingStocks(data))
       .catch((err) => {
@@ -46,7 +46,7 @@ export default function Home() {
   }, [])
 
   useEffect(() => {
-    fetch("http://172.20.10.6/api/forecast/list", { method: "get", headers: new Headers({ "ngrok-skip-browser-warning": "true", }) })
+    fetch("http://172.20.10.6:3002/api/forecast/list", { method: "get", headers: new Headers({ "ngrok-skip-browser-warning": "true", }) })
       .then((res) => res.json())
       .then((data) => setStocks(data))
   }, [])
@@ -54,7 +54,7 @@ export default function Home() {
   useEffect(() => {
     if (!trendingStocks) return; //@ts-ignore
     Promise.all(trendingStocks.map((ts) => {
-      return fetch("http://172.20.10.6/api/forecast/" + ts, { method: "get", headers: new Headers({ "ngrok-skip-browser-warning": "true", }) })
+      return fetch("http://172.20.10.6:3002/api/forecast/" + ts, { method: "get", headers: new Headers({ "ngrok-skip-browser-warning": "true", }) })
         .then((res) => res.json())
     })).then((data) => {
       setForecasts(data)
