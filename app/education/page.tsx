@@ -26,7 +26,7 @@ export default function Component() {
         </div>
         {topicId == -1 ?
           <div>
-            <Card className='mt-4'>
+            <Card >
               <CardContent>
                 <div className='pt-4'>
                   <div className="flex grow-1 justify-between">
@@ -44,7 +44,7 @@ export default function Component() {
                 </Button>
               </CardFooter>
             </Card>
-            <Card>
+            <Card className='mt-4'>
               <CardContent>
                 <div className='pt-4'>
                   <div className="flex grow-1 justify-between">
