@@ -6,87 +6,17 @@ import { CardContent, Card } from "@/components/ui/card"
 import { Command, CommandInput, CommandGroup, CommandItem, CommandList } from "@/components/ui/command"
 import { Table, TableBody, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Bookmark, CloudLightning, CloudRain, CloudSun, LucideSun } from "lucide-react"
 import { IoMdMedal } from "react-icons/io"
 import { IoSchool } from "react-icons/io5"
 
-let stocks = [
-  {
-    name: "Apple Inc.",
-    symbol: "AAPL",
-    priceList: [
-      145.32,
-      230.45,
-      210.23,
-      400.56,
-    ],
-    high: 175.53,
-    low: 120.67,
-    volume: 12.3,
-    marketCap: 2.4,
-    percentChange: 2.5,
-  },
-  {
-    name: "Tesla Inc.",
-    symbol: "TSLA",
-    priceList: [
-      320.45,
-      250.67,
-      402.67,
-      300.11,
-    ],
-    high: 402.67,
-    low: 250.11,
-    volume: 8.7,
-    marketCap: 1.0,
-    percentChange: -3.2,
-  },
-  {
-    name: "Amazon.com Inc.",
-    symbol: "AMZN",
-    priceList: [
-      105.23,
-      170.83,
-      81.43,
-      150.67,
-    ],
-    high: 170.83,
-    low: 81.43,
-    volume: 15.4,
-    marketCap: 1.1,
-    percentChange: 1.8,
-  },
-  {
-    name: "Microsoft Corporation",
-    symbol: "MSFT",
-    priceList: [
-      130.23,
-      180.83,
-      91.43,
-      140.67,
-    ],
-    high: 180.83,
-    low: 91.43,
-    volume: 10.4,
-    marketCap: 1.9,
-    percentChange: 0.5,
-  },
-  {
-    name: "Alphabet Inc.",
-    symbol: "GOOGL",
-    priceList: [
-      150.23,
-      190.83,
-      101.43,
-      160.67,
-    ],
-    high: 190.83,
-    low: 101.43,
-    volume: 9.4,
-    marketCap: 2.1,
-    percentChange: 92.8,
-  }
+let trendingStock = [
+  "AAPL",
+  "TSLA",
+  "AMZN",
+  "MSFT",
+  "GOOGL",
 ]
 
 let forecast = [
@@ -97,15 +27,41 @@ let forecast = [
   { stock: "GOOGL", forecast: "UP", percent: 92.8 },
 ]
 
-
 export default function Home() {
+  let [forecasts, setForecasts] = useState([]);
+  let [trendingStocks, setTrendingStocks] = useState(null);
   let router = useRouter();
-  let [watchlist, setWatchlist] = useState([
-    "AAPL",
-    "TSLA",
-    "AMZN",
-  ]);
   let [searchContent, setSearchContent] = useState("");
+
+  useEffect(() => {
+    fetch("http://172.20.10.7/api/popular_stocks")
+      .then((res) => res.json())
+      .then((data) => setTrendingStocks(data))
+      .catch((err) => {
+        console.error(err);
+        console.log("Using mock data");
+        setTrendingStocks(trendingStocks);
+      });
+  }, [])
+
+  useEffect(() => {
+    if (!trendingStocks) return;
+    Promise.all(trendingStocks.map((ts) => {
+      return fetch("http://172.20.10.7/api/forecast/" + ts)
+        .then((res) => res.json())
+    })).then((data) => {
+      setForecasts(data)
+    }).catch((err) => {
+      console.error(err);
+      console.log("Using mock data");
+      setForecasts(forecast);
+    });
+  }, [trendingStocks])
+
+  if (forecasts.length == 0 || !forecasts) {
+    return <div>Loading...</div>
+  }
+
   return (
     <div className="h-screen w-screen justify-center flex-col">
       <header className="flex h-16 items-center p-5 border-b bg-gray-200 border-gray-700 pt-5 mb-5">
@@ -215,20 +171,20 @@ export default function Home() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {forecast.map((item) => (
+                {forecasts.toSorted((a, b) => - ((a.forecast === "UP" ? 1 : -1) * a.percent) + ((b.forecast === "UP" ? 1 : -1) * b.percent)).map((item) => (
                   <TableRow key={item.stock} onClick={() => router.push("/details/" + item.stock)} className="cursor-pointer">
                     <td>
                       {item.forecast === "UP"
                         ? item.percent > 1
                           ? <LucideSun className="mx-auto h-24 w-24 text-yellow-500" />
                           : <CloudSun className="mx-auto h-24 w-24 text-yellow-500" />
-                        : item.percent < -1
+                        : item.percent > 1
                           ? <CloudLightning className="mx-auto h-24 w-24 text-gray-500" />
                           : <CloudRain className="mx-auto h-24 w-24 text-blue-500" />
                       }
                     </td>
                     <td className="text-center">
-                      <span className={`text-lg font-semibold ${item.percent > 0 ? "text-green-500" : "text-red-500"}`}>
+                      <span className={`text-lg font-semibold ${item.forecast === "UP" ? "text-green-500" : "text-red-500"}`}>
                         {item.forecast} {item.percent}%
                       </span>
                     </td>
