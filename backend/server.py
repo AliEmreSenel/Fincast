@@ -13,6 +13,7 @@ cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
 USE_MODEL = False
+df = pd.read_csv("backend/nasdaq.csv")
 
 @app.route("/api/popular_stocks", methods=['GET'])
 @cross_origin()
@@ -33,13 +34,14 @@ def name(stock):
             return json.dumps({"stock": request.view_args['stock'], "name": "Alphabet Inc."})
         elif request.view_args['stock'] == "TSLA":
             return json.dumps({"stock": request.view_args['stock'], "name": "Tesla Inc."})
-    else:
-        return '404'
+    for index, row in df.iterrows():
+        if row['Ticker'] == request.view_args['stock']:
+            return json.dumps({"stock": request.view_args['stock'], "name": row['Name']})
+    return '404'
     
 @app.route("/api/forecast/list", methods=['GET'])
 @cross_origin()
 def stocks_list():
-    df = pd.read_csv("backend/nasdaq.csv")
     stocks_dict = {}
     for index, row in df.iterrows():
         stocks_dict[row['Ticker']] = row['Name']
@@ -120,8 +122,7 @@ def indx(stock):
                 answer = ANSWER_TSLA
                 change = ("DOWN", "3")
                 return json.dumps({"stock": request.view_args['stock'], "forecast": change[0], "percent": int(change[1])})
-    else:
-        return json.dumps({"stock": request.view_args['stock'], "forecast": "TODO", "percent": "TODO"})
+    return json.dumps({"stock": request.view_args['stock'], "forecast": "TODO", "percent": "TODO"})
     
 @app.route("/api/forecast/<stock>/QA", methods=['GET'])
 @cross_origin()
@@ -422,5 +423,5 @@ Ultimately, investors should consider a range of factors, including the company'
 }
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port='80')
+    app.run(host='0.0.0.0', port='3002')
     
