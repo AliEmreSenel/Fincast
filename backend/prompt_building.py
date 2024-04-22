@@ -125,8 +125,8 @@ def build_prompt_from_df(STOCK, startDate, endDate, period=7):
     country = df_company_profile["country"].iloc[0]
     ticker = df_company_profile["ticker"].iloc[0]
     exchange = df_company_profile["exchange"].iloc[0]
-    startDate = startDate
-    endDate = endDate
+    #    startDate = startDate
+    #    endDate = endDate
 
     startPrice = df_prices["Open"].iloc[0]
     endPrice = df_prices["Close"].iloc[-1]
