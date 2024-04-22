@@ -11,22 +11,6 @@ import { Bookmark, CloudLightning, CloudRain, CloudSun, LucideSun } from "lucide
 import { IoMdMedal } from "react-icons/io"
 import { IoSchool } from "react-icons/io5"
 
-let trendingStock = [
-  "AAPL",
-  "TSLA",
-  "AMZN",
-  "MSFT",
-  "GOOGL",
-]
-
-let forecast = [
-  { stock: "AAPL", forecast: "UP", percent: 2.5 },
-  { stock: "TSLA", forecast: "DOWN", percent: -3.2 },
-  { stock: "AMZN", forecast: "UP", percent: 1.8 },
-  { stock: "MSFT", forecast: "UP", percent: 0.5 },
-  { stock: "GOOGL", forecast: "UP", percent: 92.8 },
-]
-
 export default function Home() {
   let [forecasts, setForecasts] = useState([]);
   let [trendingStocks, setTrendingStocks] = useState(null);
@@ -37,12 +21,7 @@ export default function Home() {
   useEffect(() => {
     fetch("http://172.20.10.6:3002/api/popular_stocks", { method: "get", headers: new Headers({ "ngrok-skip-browser-warning": "true", }) })
       .then((res) => res.json())
-      .then((data) => setTrendingStocks(data))
-      .catch((err) => {
-        console.error(err);
-        console.log("Using mock data");
-        setTrendingStocks(trendingStocks);
-      });
+      .then((data) => setTrendingStocks(data));
   }, [])
 
   useEffect(() => {
@@ -58,10 +37,6 @@ export default function Home() {
         .then((res) => res.json())
     })).then((data) => {
       setForecasts(data)
-    }).catch((err) => {
-      console.error(err);
-      console.log("Using mock data"); //@ts-ignore
-      setForecasts(forecast);
     });
   }, [trendingStocks])
 
