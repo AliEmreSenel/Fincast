@@ -24,7 +24,7 @@ export default function Component() {
             <CircularProgressbar value={percentage} text={`${percentage}%`} className='h-16 w-16' strokeWidth={14} />
           </div>
         </div>
-        {topicId == -1 ?
+        {topicId == -1 &&
           <div>
             <Card >
               <CardContent>
@@ -80,7 +80,11 @@ export default function Component() {
                 </Button>
               </CardFooter>
             </Card>
-          </div> : topicId == 1 ? <Article1 /> : topicId == 2 ? <Article2 /> : topicId == 3 ? <Article3 /> : ""}
+          </div>
+        }
+        {topicId == 1 && <Article1 />}
+        {topicId == 2 && <Article2 />}
+        {topicId == 3 && <Article3 />}
         {topicId !== -1 && <Button className='flex flex-grow bg-blue-500 hover:bg-blue-600' onClick={() => setTopicId(-1)}> Close </Button>}
       </div>
     </div>

@@ -1,11 +1,8 @@
 "use client"
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
-import { Input } from '@/components/ui/input'
 import { useEffect, useMemo, useState } from 'react'
-import { Line, ResponsiveLine } from '@nivo/line'
 import arrayShuffle from 'array-shuffle'
-import ReactECharts from 'echarts-for-react'
 import EChartsReact from 'echarts-for-react'
 import { CircularProgressbar } from 'react-circular-progressbar'
 import 'react-circular-progressbar/dist/styles.css';
@@ -142,7 +139,7 @@ export default function Component() {
   let [questionIndex, setQuestionIndex] = useState(0);
   let [selectedAnswer, setSelectedAnswer] = useState(-1);
   let [score, setScore] = useState(0);
-  let [showSolution, setShowSolution] = useState(false);
+  let [_, setShowSolution] = useState(false);
   let [showResults, setShowResults] = useState(false);
   let [isClient, setIsClient] = useState(false);
   let questions = useMemo(() => arrayShuffle(questionList.map((question) => {
