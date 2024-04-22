@@ -98,8 +98,7 @@ export default function Home() {
                             <CommandItem key={i}
                               onClick={() => router.push(`/details/${sym}`)}
                               onSelect={() => router.push(`/details/${sym}`)}>
-                              <span
-                                onClick={() => router.push(`/details/${sym}`)}>{nmae} ({sym})</span>
+                              <span>{nmae} ({sym})</span>
                             </CommandItem>
                           ))}
                         </CommandGroup>
